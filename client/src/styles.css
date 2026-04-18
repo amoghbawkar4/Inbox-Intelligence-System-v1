@@ -1,0 +1,281 @@
+:root {
+  color: #18201d;
+  background: #f7f8f4;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    linear-gradient(90deg, rgba(46, 125, 110, 0.08), transparent 45%),
+    linear-gradient(180deg, #f7f8f4 0%, #eaf1ed 100%);
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: 0;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
+.login-page,
+.loading {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.login-panel {
+  background: #ffffff;
+  border: 1px solid #d8e4db;
+  border-radius: 8px;
+  box-shadow: 0 24px 70px rgba(24, 32, 29, 0.12);
+  max-width: 680px;
+  padding: 48px;
+}
+
+.eyebrow {
+  color: #287766;
+  font-size: 0.82rem;
+  font-weight: 800;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+p {
+  overflow-wrap: anywhere;
+}
+
+h1 {
+  font-size: clamp(2rem, 6vw, 4.8rem);
+  letter-spacing: 0;
+  line-height: 1;
+  margin: 0 0 18px;
+}
+
+h2 {
+  font-size: 1.3rem;
+  line-height: 1.25;
+  margin: 12px 0 8px;
+}
+
+h3 {
+  font-size: 0.85rem;
+  margin: 0 0 6px;
+  text-transform: uppercase;
+}
+
+.login-panel p {
+  color: #47544e;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.primary-button,
+.secondary-button,
+.ghost-button,
+.filter {
+  min-height: 44px;
+  padding: 0 18px;
+}
+
+.primary-button {
+  background: #ef4d3f;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.secondary-button {
+  background: #287766;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.ghost-button,
+.filter {
+  background: #ffffff;
+  border: 1px solid #cddbd1;
+  color: #18201d;
+}
+
+.filter.active {
+  background: #18201d;
+  color: #ffffff;
+}
+
+.security-note {
+  font-size: 0.92rem;
+  margin-top: 18px;
+}
+
+.dashboard {
+  margin: 0 auto;
+  max-width: 1180px;
+  padding: 32px 20px 60px;
+}
+
+.app-header,
+.toolbar {
+  align-items: center;
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+}
+
+.welcome {
+  color: #47544e;
+  margin: 0;
+}
+
+.user-actions,
+.button-row,
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.user-actions {
+  align-items: center;
+}
+
+.user-actions img {
+  border-radius: 50%;
+  height: 44px;
+  width: 44px;
+}
+
+.toolbar {
+  border-bottom: 1px solid #d8e4db;
+  border-top: 1px solid #d8e4db;
+  margin: 28px 0 20px;
+  padding: 18px 0;
+}
+
+.metrics {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 18px;
+}
+
+.metrics div {
+  background: #ffffff;
+  border: 1px solid #d8e4db;
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.metrics span {
+  display: block;
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.metrics p {
+  color: #47544e;
+  margin: 4px 0 0;
+}
+
+.status {
+  background: #fff8dc;
+  border: 1px solid #e5d17c;
+  border-radius: 8px;
+  color: #4e471d;
+  padding: 12px 14px;
+}
+
+.summary-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.summary-card,
+.empty-state {
+  background: #ffffff;
+  border: 1px solid #d8e4db;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.summary-topline {
+  align-items: center;
+  color: #627169;
+  display: flex;
+  font-size: 0.84rem;
+  justify-content: space-between;
+}
+
+.category {
+  border-radius: 8px;
+  color: #ffffff;
+  font-weight: 800;
+  padding: 5px 9px;
+}
+
+.category.Urgent {
+  background: #c83232;
+}
+
+.category.Read-Later {
+  background: #287766;
+}
+
+.category.Ignore {
+  background: #66706a;
+}
+
+.sender {
+  color: #627169;
+  font-size: 0.92rem;
+  margin: 0 0 16px;
+}
+
+.summary-section {
+  border-top: 1px solid #edf2ef;
+  padding-top: 14px;
+}
+
+.summary-section p {
+  color: #333d38;
+  line-height: 1.55;
+  margin-top: 0;
+}
+
+@media (max-width: 760px) {
+  .login-panel {
+    padding: 28px;
+  }
+
+  .app-header,
+  .toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+}
