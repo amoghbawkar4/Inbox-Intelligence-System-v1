@@ -50,25 +50,20 @@ app.use((error, req, res, next) => {
   });
 });
 
-connectDB()
-  .then(() => {
-    const server = app.listen(port, () => {
-      console.log(`Server running on http://localhost:${port}`);
-      startDailyDigestJob();
-    });
+const server = app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+  startDailyDigestJob();
+});
 
-    server.on("error", (error) => {
-      if (error.code === "EADDRINUSE") {
-        console.error(
-          `Port ${port} is already in use. Change PORT in server/.env or stop the process using that port.`
-        );
-        process.exit(1);
-      }
-
-      throw error;
-    });
-  })
-  .catch((error) => {
-    console.error("Failed to start server", error);
+server.on("error", (error) => {
+  if (error.code === "EADDRINUSE") {
+    console.error(`Port ${port} is already in use.`);
     process.exit(1);
-  });
+  }
+  throw error;
+});
+
+// connect DB separately
+connectDB()
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("MongoDB connection failed:", err));
