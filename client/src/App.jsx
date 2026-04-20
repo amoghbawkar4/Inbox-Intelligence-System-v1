@@ -21,12 +21,10 @@ function Login() {
           Gmail tokens stay on the server. The browser only receives your app
           session cookie.
         </p>
+        <footer className="footer">
+          <a href="/privacy">Privacy Policy</a>
+        </footer>
       </section>
-
-      <footer className="footer">
-        <a href="/privacy">Privacy Policy</a>
-      </footer>
-      
     </main>
   );
 }
