@@ -22,6 +22,11 @@ function Login() {
           session cookie.
         </p>
       </section>
+
+      <footer className="footer">
+        <a href="/privacy">Privacy Policy</a>
+      </footer>
+      
     </main>
   );
 }
