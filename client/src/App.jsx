@@ -21,10 +21,10 @@ function Login() {
           Gmail tokens stay on the server. The browser only receives your app
           session cookie.
         </p>
-        <footer className="footer">
-          <a href="/privacy">Privacy Policy</a>
-        </footer>
       </section>
+      <footer className="footer">
+        <a href="/privacy">Privacy Policy</a>
+      </footer>
     </main>
   );
 }
@@ -181,9 +181,8 @@ function Dashboard({ user, onLogout }) {
           </div>
         )}
       </section>
-
       <footer className="footer">
-        <a href="/privacy">Privacy Policy</a>
+          <a href="/privacy">Privacy Policy</a>
       </footer>
     </main>
   );
@@ -206,17 +205,9 @@ export default function App() {
     setUser(null);
   }
 
-  const path = window.location.pathname;
-
-if (path === "/privacy") {
-  return <Privacy />;
-}
-
-if (checking) {
-  return <main className="loading">Loading...</main>;
-}
-
-return user ? <Dashboard user={user} onLogout={logout} /> : <Login />;
+  if (checking) {
+    return <main className="loading">Loading...</main>;
+  }
 
   return user ? <Dashboard user={user} onLogout={logout} /> : <Login />;
 }
