@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom";
 import { api, loginWithGoogle } from "./api.js";
 import Privacy from "./Privacy";
 
@@ -22,6 +21,9 @@ function Login() {
           Gmail tokens stay on the server. The browser only receives your app
           session cookie.
         </p>
+        <footer className="footer">
+          <a href="/privacy">Privacy Policy</a>
+        </footer>
       </section>
     </main>
   );
@@ -181,7 +183,7 @@ function Dashboard({ user, onLogout }) {
       </section>
 
       <footer className="footer">
-        <Link to="/privacy">Privacy Policy</Link>
+        <a href="/privacy">Privacy Policy</a>
       </footer>
     </main>
   );
@@ -204,45 +206,17 @@ export default function App() {
     setUser(null);
   }
 
-  if (checking) {
-    return <main className="loading">Loading...</main>;
-  }
+  const path = window.location.pathname;
 
-  return (
-    <BrowserRouter>
-      <Routes>
+if (path === "/privacy") {
+  return <Privacy />;
+}
 
-        {/* HOME */}
-        <Route
-          path="/"
-          element={
-            user ? (
-              <Navigate to="/dashboard" replace />
-            ) : (
-              <Login />
-            )
-          }
-        />
+if (checking) {
+  return <main className="loading">Loading...</main>;
+}
 
-        {/* DASHBOARD */}
-        <Route
-          path="/dashboard"
-          element={
-            user ? (
-              <Dashboard user={user} onLogout={logout} />
-            ) : (
-              <Navigate to="/" replace />
-            )
-          }
-        />
+return user ? <Dashboard user={user} onLogout={logout} /> : <Login />;
 
-        {/* PRIVACY */}
-        <Route path="/privacy" element={<Privacy />} />
-
-        {/* FALLBACK */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-
-      </Routes>
-    </BrowserRouter>
-  );
+  return user ? <Dashboard user={user} onLogout={logout} /> : <Login />;
 }
