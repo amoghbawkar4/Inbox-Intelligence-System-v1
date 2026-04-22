@@ -22,9 +22,6 @@ function Login() {
           session cookie.
         </p>
       </section>
-      <footer className="footer">
-        <a href="/privacy">Privacy Policy</a>
-      </footer>
     </main>
   );
 }
@@ -181,8 +178,9 @@ function Dashboard({ user, onLogout }) {
           </div>
         )}
       </section>
+
       <footer className="footer">
-          <a href="/privacy">Privacy Policy</a>
+        <a href="/privacy">Privacy Policy</a>
       </footer>
     </main>
   );
@@ -205,9 +203,17 @@ export default function App() {
     setUser(null);
   }
 
-  if (checking) {
-    return <main className="loading">Loading...</main>;
-  }
+  const path = window.location.pathname;
+
+if (path === "/privacy") {
+  return <Privacy />;
+}
+
+if (checking) {
+  return <main className="loading">Loading...</main>;
+}
+
+return user ? <Dashboard user={user} onLogout={logout} /> : <Login />;
 
   return user ? <Dashboard user={user} onLogout={logout} /> : <Login />;
 }
