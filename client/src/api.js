@@ -1,4 +1,5 @@
-const API_BASE = import.meta.env.VITE_API_BASE;
+const envApiBase = import.meta.env.VITE_API_BASE?.trim().replace(/\/+$/, "");
+const API_BASE = envApiBase || (import.meta.env.DEV ? "http://localhost:5000" : "");
 
 async function request(path, options = {}) {
   const response = await fetch(`${API_BASE}${path}`, {
