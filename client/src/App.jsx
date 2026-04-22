@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { api, loginWithGoogle } from "./api.js";
+import Privacy from "./Privacy";
+import { Link } from "react-router-dom";
 
 const filters = ["All", "Urgent", "Read Later", "Ignore"];
 
@@ -177,6 +180,10 @@ function Dashboard({ user, onLogout }) {
           </div>
         )}
       </section>
+
+      <footer className="footer">
+        <Link to="/privacy">Privacy Policy</Link>
+      </footer>
     </main>
   );
 }
@@ -202,5 +209,41 @@ export default function App() {
     return <main className="loading">Loading...</main>;
   }
 
-  return user ? <Dashboard user={user} onLogout={logout} /> : <Login />;
+  return (
+    <BrowserRouter>
+      <Routes>
+
+        {/* HOME */}
+        <Route
+          path="/"
+          element={
+            user ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Login />
+            )
+          }
+        />
+
+        {/* DASHBOARD */}
+        <Route
+          path="/dashboard"
+          element={
+            user ? (
+              <Dashboard user={user} onLogout={logout} />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
+
+        {/* PRIVACY */}
+        <Route path="/privacy" element={<Privacy />} />
+
+        {/* FALLBACK */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+
+      </Routes>
+    </BrowserRouter>
+  );
 }
