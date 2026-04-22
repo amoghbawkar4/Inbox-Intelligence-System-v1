@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom";
 import { api, loginWithGoogle } from "./api.js";
 import Privacy from "./Privacy";
-import { Link } from "react-router-dom";
 
 const filters = ["All", "Urgent", "Read Later", "Ignore"];
 
