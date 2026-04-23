@@ -4,8 +4,7 @@ import { summarizeEmail } from "./openaiService.js";
 
 export async function processUnprocessedEmails(user, limit = 10) {
   const emails = await Email.find({
-    userId: user._id,
-    processed: false
+    userId: user._id
   })
     .sort({ receivedAt: -1, createdAt: -1 })
     .limit(limit);
@@ -13,27 +12,27 @@ export async function processUnprocessedEmails(user, limit = 10) {
   const summaries = [];
 
   for (const email of emails) {
-    const existing = await Summary.findOne({
-      userId: user._id,
-      emailId: email._id
-    });
-
-    if (existing) {
-      email.processed = true;
-      await email.save();
-      summaries.push(existing);
-      continue;
-    }
-
     const result = await summarizeEmail(email);
-    const summary = await Summary.create({
-      userId: user._id,
-      emailId: email._id,
-      ...result
-    });
+
+    const summary = await Summary.findOneAndUpdate(
+      {
+        userId: user._id,
+        emailId: email._id
+      },
+      {
+        userId: user._id,
+        emailId: email._id,
+        ...result
+      },
+      {
+        upsert: true,
+        new: true
+      }
+    );
 
     email.processed = true;
     await email.save();
+
     summaries.push(summary);
   }
 

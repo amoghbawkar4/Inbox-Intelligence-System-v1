@@ -6,7 +6,10 @@ const router = express.Router();
 
 router.get("/", requireAuth, async (req, res, next) => {
   try {
-    const summaries = await getUserSummaries(req.user._id, req.query.category);
+    const summaries = await getUserSummaries(
+      req.user._id,
+      req.query.category
+    );
     res.json({ summaries });
   } catch (error) {
     next(error);
