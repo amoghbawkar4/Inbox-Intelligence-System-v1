@@ -1,173 +1,98 @@
-# Smart Newsletter Summarizer
+# ✦ Inbox Intelligence System (v1)
 
-A full-stack MERN application where each user signs in with Google, grants Gmail read/send access, gets recent newsletter emails summarized with OpenAI, and can send a daily digest from their own Gmail account to themselves.
+An AI-powered system that transforms your Gmail inbox into a **prioritized, actionable feed** — helping you focus only on what truly matters.
 
-## Project Structure
+---
 
-```text
-smart-newsletter-summarizer/
-  package.json
-  README.md
-  client/
-    package.json
-    index.html
-    vite.config.js
-    src/
-      App.jsx
-      api.js
-      main.jsx
-      styles.css
-  server/
-    .env
-    .env.example
-    package.json
-    src/
-      config/db.js
-      jobs/dailyDigestJob.js
-      middleware/auth.js
-      models/Email.js
-      models/Summary.js
-      models/User.js
-      routes/authRoutes.js
-      routes/digestRoutes.js
-      routes/emailRoutes.js
-      routes/summaryRoutes.js
-      services/contentCleaner.js
-      services/digestService.js
-      services/gmailService.js
-      services/googleOAuth.js
-      services/openaiService.js
-      services/summaryService.js
-      utils/gmail.js
-      utils/jwt.js
-      server.js
-```
+## 🧠 The Problem
 
-## Environment Variables
+Modern inboxes are noisy.
 
-The backend reads all secrets from [server/.env](server/.env). Do not hardcode credentials.
+Newsletters, updates, promotions, and alerts flood in daily — making it difficult to identify what actually deserves attention.
 
-```env
-OPENAI_API_KEY=
-MONGO_URI=
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-GOOGLE_REDIRECT_URI=
-JWT_SECRET=
-CLIENT_URL=http://localhost:5173
-PORT=5000
-CRON_SCHEDULE=0 8 * * *
-OPENAI_MODEL=gpt-4o-mini
-OPENAI_FALLBACK_ON_ERROR=true
-```
+Most tools stop at filtering or labeling.
+They don’t help you **decide what to do next**.
 
-`JWT_SECRET` should be a long random value. `GOOGLE_REDIRECT_URI` should be:
+---
 
-```text
-http://localhost:5000/api/auth/google/callback
-```
+## 💡 The Solution
 
-`OPENAI_FALLBACK_ON_ERROR=true` lets local development keep working if the OpenAI key is missing, rate limited, or out of quota. Set it to `false` in production if you want failed OpenAI calls to fail the request instead of using the local fallback summarizer.
+Inbox Intelligence System connects to your Gmail account, analyzes incoming emails using AI, and:
 
-## Google OAuth Setup
+* Generates concise summaries (TL;DR)
+* Classifies emails by priority
+* Suggests actionable next steps
+* Sends a clean daily digest directly from your inbox
 
-1. Open Google Cloud Console.
-2. Create or select a project.
-3. Enable the Gmail API.
-4. Configure the OAuth consent screen.
-5. Create OAuth 2.0 credentials for a Web application.
-6. Add this authorized redirect URI:
+---
 
-```text
-http://localhost:5000/api/auth/google/callback
-```
+## ⚙️ Key Features
 
-7. Put the client ID and client secret in [server/.env](server/.env).
+### 📥 Gmail Integration
 
-The app requests these scopes:
+* Secure OAuth-based authentication
+* Reads emails directly from your inbox
+* No passwords stored
 
-```text
-https://www.googleapis.com/auth/gmail.readonly
-https://www.googleapis.com/auth/gmail.send
-https://www.googleapis.com/auth/userinfo.email
-https://www.googleapis.com/auth/userinfo.profile
-```
+### 🤖 AI-Powered Summarization
 
-For production, use HTTPS URLs for both the frontend and backend, add the production callback URL to Google Cloud Console, and set `CLIENT_URL` to the production frontend origin.
+* Extracts key information from emails
+* Generates structured summaries
+* Identifies why the email matters
 
-## Install and Run
+### 🧠 Intelligent Categorization
 
-Install all dependencies:
+Emails are automatically classified into:
 
-```bash
-npm install
-npm run install:all
-```
+* 🔴 Urgent
+* 🔵 Read Later
+* ⚫ Ignore
 
-Start MongoDB locally or set `MONGO_URI` to a hosted MongoDB connection string.
+### 📬 Daily Digest System
 
-Run both apps:
+* Compiles summaries into a single digest
+* Sends it via your own Gmail account
+* Designed for quick scanning and decision-making
 
-```bash
-npm run dev
-```
+### 🔒 User Isolation
 
-Open:
+* Each user’s data is completely isolated
+* No cross-user data mixing
+* Token-based authentication with JWT
 
-```text
-http://localhost:5173
-```
+---
 
-The backend runs at:
+## 🏗️ Tech Stack
 
-```text
-http://localhost:5000
-```
+### Frontend
 
-## How It Works
+* React (Vite)
+* Plain CSS (custom design system)
+* Responsive UI with light/dark mode
 
-1. The frontend sends users to `/api/auth/google`.
-2. Google returns an authorization code to `/api/auth/google/callback`.
-3. The backend exchanges the code for an access token and refresh token.
-4. The backend stores tokens on the matching user document in MongoDB.
-5. The browser receives only an httpOnly app session cookie.
-6. Protected routes load the user from the JWT cookie and never expose Gmail tokens to React.
-7. Gmail fetches use that user's access token only.
-8. Expired access tokens are refreshed with that user's refresh token and saved back to MongoDB.
-9. New, useful emails are cleaned, filtered, summarized, stored, and marked processed.
-10. Digest emails are sent with Gmail API `users.messages.send` from the logged-in user's own Gmail account to themselves.
+### Backend
 
-## Main API Routes
+* Node.js + Express
+* MongoDB (Mongoose)
 
-```text
-GET  /api/auth/google
-GET  /api/auth/google/callback
-GET  /api/auth/me
-POST /api/auth/logout
-POST /api/emails/fetch
-POST /api/emails/process
-POST /api/emails/sync
-GET  /api/summaries
-POST /api/digest/send
-```
+### AI & Integrations
 
-## Daily Cron
+* OpenAI API (for summarization & insights)
+* Gmail API (email fetching & sending)
+* Google OAuth 2.0 (authentication)
 
-The backend starts a cron job using `CRON_SCHEDULE`, defaulting to `0 8 * * *`.
+---
 
-For each user, the job:
+## 🔄 System Flow
 
-1. Refreshes the Gmail access token if needed.
-2. Fetches recent inbox emails.
-3. Skips duplicates, short emails, and promotional emails.
-4. Summarizes unprocessed useful emails.
-5. Sends a digest from that user's Gmail account to their own email address.
+1. User authenticates via Google OAuth
+2. Gmail API fetches emails
+3. Emails are cleaned and processed
+4. OpenAI generates:
 
-## Security Notes
-
-- No passwords are stored.
-- Gmail tokens are stored server-side only.
-- Each query is scoped by `userId`.
-- Gmail access tokens are refreshed per user with that user's refresh token.
-- Use HTTPS in production.
-- Consider encrypting stored OAuth tokens at rest before deploying to production.
+   * TL;DR summary
+   * Importance classification
+   * Suggested action
+5. Data is stored in MongoDB
+6. User views categorized summaries in dashboard
+7. Daily digest is generated and sent via Gmail
