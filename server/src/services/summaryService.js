@@ -4,7 +4,8 @@ import { summarizeEmail } from "./openaiService.js";
 
 export async function processUnprocessedEmails(user, limit = 10) {
   const emails = await Email.find({
-    userId: user._id
+    userId: user._id,
+    processed: false
   })
     .sort({ receivedAt: -1, createdAt: -1 })
     .limit(limit);
