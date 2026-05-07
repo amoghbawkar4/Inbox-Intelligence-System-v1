@@ -12,30 +12,40 @@ export async function processUnprocessedEmails(user, limit = 10) {
 
   const summaries = [];
 
-  for (const email of emails) {
-    const result = await summarizeEmail(email);
+  const batchSize = 5;
 
-    const summary = await Summary.findOneAndUpdate(
-      {
-        userId: user._id,
-        emailId: email._id
-      },
-      {
-        userId: user._id,
-        emailId: email._id,
-        ...result
-      },
-      {
-        upsert: true,
-        new: true
-      }
-    );
+for (let i = 0; i < emails.length; i += batchSize) {
+  const batch = emails.slice(i, i + batchSize);
 
-    email.processed = true;
-    await email.save();
+  const batchResults = await Promise.all(
+    batch.map(async (email) => {
+      const result = await summarizeEmail(email);
 
-    summaries.push(summary);
-  }
+      const summary = await Summary.findOneAndUpdate(
+        {
+          userId: user._id,
+          emailId: email._id
+        },
+        {
+          userId: user._id,
+          emailId: email._id,
+          ...result
+        },
+        {
+          upsert: true,
+          new: true
+        }
+      );
+
+      email.processed = true;
+      await email.save();
+
+      return summary;
+    })
+  );
+
+  summaries.push(...batchResults);
+}
 
   return summaries;
 }
