@@ -52,9 +52,12 @@ function getClient() {
   return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 }
 
-export async function summarizeEmail(email) {
+export async function summarizeEmail(email, heuristics = {}) {
   const client = getClient();
-  const content = truncateForModel(email.cleaned_content);
+  const content = truncateForModel(
+    email.cleaned_content,
+    heuristics
+  );
 
   if (!client) {
     return createFallbackSummary(email, "OPENAI_API_KEY is missing");
@@ -75,7 +78,19 @@ export async function summarizeEmail(email) {
         },
         {
           role: "user",
-          content: `Subject: ${email.subject}\nSender: ${email.sender}\n\nEmail:\n${content}`
+          content: `
+          Subject: ${email.subject}
+          Sender: ${email.sender}
+
+          Heuristic Analysis:
+          - Promotional Score: ${heuristics.promotionalScore}
+          - Urgency Score: ${heuristics.urgencyScore}
+          - Short Content: ${heuristics.shortContent}
+          - Content Length: ${heuristics.contentLength}
+
+          Email:
+          ${content}
+          `
         }
       ]
     });

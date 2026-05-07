@@ -31,11 +31,15 @@ export function cleanEmailContent(rawContent = "") {
   return lines.join("\n").replace(/\n{3,}/g, "\n\n").trim();
 }
 
-export function isLowValueEmail({ subject = "", sender = "", content = "" }) {
+export function analyzeEmailHeuristics({
+  subject = "",
+  sender = "",
+  content = ""
+}) {
   const compact = content.replace(/\s+/g, " ").trim();
-  const haystack = `${subject} ${sender} ${compact}`.toLowerCase();
 
-  if (compact.length < 350) return true;
+  const haystack =
+    `${subject} ${sender} ${compact}`.toLowerCase();
 
   const promotionalSignals = [
     "sale",
@@ -50,14 +54,46 @@ export function isLowValueEmail({ subject = "", sender = "", content = "" }) {
     "offer expires"
   ];
 
-  const signalCount = promotionalSignals.filter((signal) =>
+  const urgentSignals = [
+    "deadline",
+    "urgent",
+    "today",
+    "tomorrow",
+    "asap",
+    "security",
+    "action required",
+    "meeting",
+    "interview"
+  ];
+
+  const promotionalScore = promotionalSignals.filter(signal =>
     haystack.includes(signal)
   ).length;
 
-  return signalCount >= 2;
+  const urgencyScore = urgentSignals.filter(signal =>
+    haystack.includes(signal)
+  ).length;
+
+  return {
+    promotionalScore,
+    urgencyScore,
+    shortContent: compact.length < 350,
+    contentLength: compact.length
+  };
 }
 
-export function truncateForModel(content, maxChars = 6000) {
+export function truncateForModel(content, heuristics = {}) {
+  let maxChars = 3000;
+
+  if (heuristics.urgencyScore >= 2) {
+    maxChars = 5000;
+  } else if (heuristics.promotionalScore >= 2) {
+    maxChars = 1500;
+  } else if (heuristics.shortContent) {
+    maxChars = 1000;
+  }
+
   if (content.length <= maxChars) return content;
-  return `${content.slice(0, maxChars)}\n\n[Content truncated for cost control]`;
+
+  return `${content.slice(0, maxChars)}\n\n[Content truncated dynamically for optimization]`;
 }

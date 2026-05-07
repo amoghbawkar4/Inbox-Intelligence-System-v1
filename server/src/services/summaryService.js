@@ -1,6 +1,7 @@
 import Email from "../models/Email.js";
 import Summary from "../models/Summary.js";
 import { summarizeEmail } from "./openaiService.js";
+import { analyzeEmailHeuristics } from "./contentCleaner.js";
 
 export async function processUnprocessedEmails(user, limit = 10) {
   const emails = await Email.find({
@@ -19,7 +20,13 @@ for (let i = 0; i < emails.length; i += batchSize) {
 
   const batchResults = await Promise.all(
     batch.map(async (email) => {
-      const result = await summarizeEmail(email);
+      const heuristics = analyzeEmailHeuristics({
+        subject: email.subject,
+        sender: email.sender,
+        content: email.cleaned_content
+      });
+
+  const result = await summarizeEmail(email, heuristics);
 
       const summary = await Summary.findOneAndUpdate(
         {
