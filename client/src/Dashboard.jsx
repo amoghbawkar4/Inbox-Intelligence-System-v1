@@ -78,14 +78,6 @@ function SummaryCard({ categoryMeta, summary, expanded, onToggle }) {
           {meta.icon} {summary.category}
         </span>
         <span className="summary-date">{formatDate(email.receivedAt)}</span>
-        <button
-          className="delete-button"
-          type="button"
-          aria-label="Delete summary"
-          onClick={(event) => event.stopPropagation()}
-        >
-          {"\u00d7"}
-        </button>
       </div>
       <h2>{email.subject || "Newsletter"}</h2>
       <p className="sender">From: {email.sender || "Unknown sender"}</p>
