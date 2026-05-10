@@ -1,7 +1,7 @@
 import { google } from "googleapis";
 import Email from "../models/Email.js";
 import { getValidAccessToken, getOAuthClient } from "./googleOAuth.js";
-import { cleanEmailContent, isLowValueEmail } from "./contentCleaner.js";
+import { cleanEmailContent, analyzeEmailHeuristics } from "./contentCleaner.js";
 import { encodeRawEmail, extractBody, getHeader } from "../utils/gmail.js";
 
 function getGmailClient(accessToken) {
