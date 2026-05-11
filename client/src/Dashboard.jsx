@@ -1,3 +1,5 @@
+//Dashboard.jsx
+
 import "./Dashboard.css";
 
 function categoryClass(category) {
@@ -132,6 +134,9 @@ export default function Dashboard({
   const firstName = getFirstName(user);
 
   return (
+  <>
+    <div className="fixed-bg" />
+
     <main className="dashboard">
       <nav className="dashboard-nav">
         <div className="dashboard-nav-inner">
@@ -304,5 +309,6 @@ export default function Dashboard({
         </div>
       ) : null}
     </main>
+    </>
   );
 }

@@ -51,14 +51,17 @@ export default function App() {
     setAllSummaries(data.summaries);
   }, []);
 
-  const loadSummaries = useCallback(async () => {
-    const category = activeFilter === "All" ? undefined : activeFilter;
-    const data = await api.getSummaries(category);
-    setSummaries(data.summaries);
-    if (activeFilter === "All") {
-      setAllSummaries(data.summaries);
-    }
-  }, [activeFilter]);
+  useEffect(() => {
+  if (activeFilter === "All") {
+    setSummaries(allSummaries);
+  } else {
+    setSummaries(
+      allSummaries.filter(
+        (summary) => summary.category === activeFilter
+      )
+    );
+  }
+}, [activeFilter, allSummaries]);
 
   useEffect(() => {
     if (!user) return;
@@ -68,13 +71,6 @@ export default function App() {
     });
   }, [loadAllSummaries, user]);
 
-  useEffect(() => {
-    if (!user) return;
-    loadSummaries().catch((error) => {
-      setStatusType("error");
-      setStatus(error.message);
-    });
-  }, [loadSummaries, user]);
 
   useEffect(() => {
     if (!status || loading) return undefined;
@@ -116,7 +112,7 @@ export default function App() {
       setStatus(
         `Saved ${result.saved}, processed ${result.processed}, skipped ${result.skipped.length}.`
       );
-      await Promise.all([loadSummaries(), loadAllSummaries()]);
+      await loadAllSummaries();
     } catch (error) {
       setStatusType("error");
       setStatus(error.message);
@@ -133,7 +129,7 @@ export default function App() {
       const result = await api.sendDigest();
       setStatusType("success");
       setStatus(`Digest sent. Gmail message id: ${result.gmailMessageId}`);
-      await Promise.all([loadSummaries(), loadAllSummaries()]);
+      await loadAllSummaries();
     } catch (error) {
       setStatusType("error");
       setStatus(error.message);

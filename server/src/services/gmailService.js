@@ -49,10 +49,11 @@ export async function fetchRecentInboxEmails(user, options = {}) {
     const rawBody = extractBody(fullMessage.payload);
     const cleaned = cleanEmailContent(rawBody);
 
-    if (isLowValueEmail({ subject, sender, content: cleaned })) {
-      skipped.push({ gmailMessageId: message.id, reason: "low_value" });
-      continue;
-    }
+    const heuristics = analyzeEmailHeuristics({
+  subject,
+  sender,
+  content: cleaned
+});
 
     const email = await Email.create({
       userId: user._id,
