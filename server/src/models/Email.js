@@ -14,7 +14,18 @@ const emailSchema = new mongoose.Schema(
     sender: { type: String, default: "" },
     cleaned_content: { type: String, required: true },
     snippet: { type: String, default: "" },
-    processed: { type: Boolean, default: false, index: true },
+    status: {
+      type: String,
+      enum: [
+        "pending",
+        "cleaned",
+        "summarized",
+        "failed",
+        "skipped"
+      ],
+    default: "pending",
+    index: true
+},
     receivedAt: { type: Date }
   },
   { timestamps: true }

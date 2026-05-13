@@ -39,6 +39,49 @@
   white-space: nowrap;
 }
 
+.dashboard-nav-actions {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+
+.settings-nav-button {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text);
+  display: inline-flex;
+  height: 42px;
+  justify-content: center;
+  transition:
+    transform 0.22s ease,
+    background-color 0.22s ease,
+    border-color 0.22s ease;
+  width: 42px;
+}
+
+:root[data-theme="dark"] .settings-nav-button {
+  background: rgba(16, 18, 37, 0.72);
+}
+
+.settings-nav-button:hover {
+  background: var(--primary-pale);
+  border-color: var(--primary-light);
+  transform: translateY(-1px);
+}
+
+.settings-nav-button:active .settings-nav-icon {
+  transform: rotate(18deg) scale(0.96);
+}
+
+.settings-nav-icon {
+  display: inline-flex;
+  font-size: 1.18rem;
+  line-height: 1;
+  transition: transform 0.22s ease;
+}
+
 .user-menu {
   position: relative;
 }
@@ -166,8 +209,7 @@
 .outline-button,
 .filter,
 .theme-toggle,
-.stat-card,
-.delete-button {
+.stat-card {
   align-items: center;
   display: inline-flex;
   justify-content: center;
@@ -486,22 +528,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.delete-button {
-  background: transparent;
-  border-radius: 50%;
-  color: var(--muted);
-  font-size: 1.35rem;
-  height: 32px;
-  line-height: 1;
-  width: 32px;
-}
-
-.delete-button:hover {
-  background: rgba(239, 68, 68, 0.1);
-  color: var(--urgent);
-  transform: translateY(-1px);
 }
 
 .summary-card h2 {

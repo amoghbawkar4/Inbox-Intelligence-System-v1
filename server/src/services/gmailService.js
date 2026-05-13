@@ -49,11 +49,29 @@ export async function fetchRecentInboxEmails(user, options = {}) {
     const rawBody = extractBody(fullMessage.payload);
     const cleaned = cleanEmailContent(rawBody);
 
+    const MIN_CONTENT_LENGTH = 40;
+
+    if (!cleaned?.trim()) {
+      console.log(
+        `[SKIPPED] Empty cleaned content | Subject: ${subject}`
+      );
+
+      continue;
+    }
+
+    if (cleaned.trim().length < MIN_CONTENT_LENGTH) {
+      console.log(
+        `[SKIPPED] Content too short | Subject: ${subject}`
+      );
+
+      continue;
+    }
+
     const heuristics = analyzeEmailHeuristics({
-  subject,
-  sender,
-  content: cleaned
-});
+      subject,
+      sender,
+      content: cleaned
+    });
 
     const email = await Email.create({
       userId: user._id,
@@ -61,6 +79,7 @@ export async function fetchRecentInboxEmails(user, options = {}) {
       threadId: fullMessage.threadId,
       subject,
       sender,
+      status: "cleaned",
       cleaned_content: cleaned,
       snippet: fullMessage.snippet || "",
       receivedAt: fullMessage.internalDate

@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { api, loginWithGoogle } from "./api.js";
-import Dashboard from "./Dashboard";
-import LandingPage from "./LandingPage";
+import Dashboard from "./pages/Dashboard/Dashboard.jsx";
+import LandingPage from "./pages/LandingPage/LandingPage.jsx";
+import Settings from "./pages/Settings/Settings.jsx";
 import Privacy from "./Privacy";
 
 const filters = ["All", "Urgent", "Read Later", "Ignore"];
@@ -52,16 +53,15 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-  if (activeFilter === "All") {
-    setSummaries(allSummaries);
-  } else {
+    if (activeFilter === "All") {
+      setSummaries(allSummaries);
+      return;
+    }
+
     setSummaries(
-      allSummaries.filter(
-        (summary) => summary.category === activeFilter
-      )
+      allSummaries.filter((summary) => summary.category === activeFilter)
     );
-  }
-}, [activeFilter, allSummaries]);
+  }, [activeFilter, allSummaries]);
 
   useEffect(() => {
     if (!user) return;
@@ -70,7 +70,6 @@ export default function App() {
       setStatus(error.message);
     });
   }, [loadAllSummaries, user]);
-
 
   useEffect(() => {
     if (!status || loading) return undefined;
@@ -155,7 +154,27 @@ export default function App() {
     return <main className="loading">Loading...</main>;
   }
 
-  return user ? (
+  if (!user) {
+    return (
+      <LandingPage
+        onLogin={loginWithGoogle}
+        onToggleTheme={toggleTheme}
+        theme={theme}
+      />
+    );
+  }
+
+  if (path === "/settings") {
+    return (
+      <Settings
+        onLogout={logout}
+        onSummariesCleared={loadAllSummaries}
+        user={user}
+      />
+    );
+  }
+
+  return (
     <Dashboard
       activeFilter={activeFilter}
       categoryMeta={categoryMeta}
@@ -177,12 +196,6 @@ export default function App() {
       theme={theme}
       toggleCard={toggleCard}
       user={user}
-    />
-  ) : (
-    <LandingPage
-      onLogin={loginWithGoogle}
-      onToggleTheme={toggleTheme}
-      theme={theme}
     />
   );
 }

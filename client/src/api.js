@@ -1,3 +1,5 @@
+//api.js
+
 const API_BASE = import.meta.env.VITE_API_BASE;
 
 async function request(path, options = {}) {
@@ -35,5 +37,9 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ maxResults: 10 })
     }),
-  sendDigest: () => request("/api/digest/send", { method: "POST" })
+  sendDigest: () => request("/api/digest/send", { method: "POST" }),
+  clearSummaries: (filter) =>
+    request(`/api/summaries/clear?filter=${encodeURIComponent(filter)}`, {
+      method: "DELETE"
+    })
 };
